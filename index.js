@@ -5,6 +5,22 @@ let playerScore = 0;
 let computerScore = 0;
 
 
+let playerScoreEl = document.querySelector(".player-score");
+let compScoreEl = document.querySelector(".computer-score");
+const result = document.querySelector(".results");
+const buttons = document.querySelectorAll(".btn");
+
+buttons.forEach(button => {
+  button.addEventListener("click", event => {
+    event.preventDefault();
+    playerSelection = button.textContent;
+    computerSelection = getComputerChoice();
+    playRound(playerSelection, computerSelection)
+  });
+})
+
+
+
 const getComputerChoice = () => {
   let randomNum = Math.floor(Math.random() * 3);
   return choice[randomNum];
@@ -13,40 +29,32 @@ const getComputerChoice = () => {
 
 const playRound = (playerSelection, computerSelection) => {
 
-  playerSelection = prompt("Pick your weapon of choice").toLowerCase();
-  computerSelection = getComputerChoice().toLowerCase();
+  playerSelection = playerSelection.toLowerCase();
+  computerSelection = computerSelection.toLowerCase();
 
-  console.log(computerSelection);
+  console.log(computerSelection, playerSelection);
 
   if(
     (playerSelection == "rock" && computerSelection == "paper") || 
     (playerSelection == "scissors" && computerSelection == "rock") || 
     (playerSelection == "paper" && computerSelection == "scissors")) {
     computerScore++;
-    return `You Lose! ${computerSelection} beats ${playerSelection}`;
+    console.log("comp", computerScore)
+    compScoreEl.innerHTML = `<p>Computer: ${computerScore}</p>`;
+    if (computerScore == 5) {
+      return result.textContent = `You Lose! Computer is the winner`;
+    }
   } else if(playerSelection == computerSelection) {
-    return "Tie! No winner";
+    console.log("Tie! No winner");
   } else {
     playerScore++;
-    return `You Win! ${playerSelection} beats ${computerSelection}`;
+    console.log("player", playerScore)
+    playerScoreEl.innerHTML = `<p>Player: ${playerScore}</p>`;
+    if (playerScore == 5) {
+      computerScore = 0;
+      playerScore = 0;
+      return result.textContent = `You Win! Let's goo`;
+    }
   }
 }
 
-
-
-const game = () => {
-
-  for(let i = 0; i < 5; i++) {
-    let result = playRound(playerSelection, computerSelection);
-    console.log(result);
-  }
-
-  console.log(`playerScore: ${playerScore} - computerScore: ${computerScore}`)
-  if(playerScore > computerScore) {
-    return "I win!"
-  } else {
-    return "Computer wins!"
-  }
-}
-
-console.log(game())
